@@ -39,7 +39,7 @@ with DAG(
     )
 
     def re_partition_func(ds_nodash):
-        from spark_flow.api import repartition
+        from sparkFlow.api import repartition
         read_dir, write_dir, cnt = repartition(ds_nodash)
         print(f"""
             READ        --->    {read_dir}
@@ -48,7 +48,7 @@ with DAG(
         """)
 
     def join_df_func(ds_nodash):
-        from spark_flow.api import join_df
+        from sparkFlow.api import join_df
 
     def agg_func(ds_nodash):
         pass
@@ -56,7 +56,7 @@ with DAG(
     re_partition = PythonVirtualenvOperator(
         task_id="re.partition",
         python_callable=re_partition_func,
-        # requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.1.0/movie_flow"],
+        requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.1.0/movie_flow"],
         system_site_packages=False,
         
     )
