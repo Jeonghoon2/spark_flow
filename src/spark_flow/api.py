@@ -21,10 +21,7 @@ def repartition(load_dt, base_path='~/data2/extract/'):
     print(df)
     
 
-    df.to_parquet(
-        write_dir,
-        cols=['load_dt','multiMovieYn','repNationCd']
-        )
+    df.write.mode("overwrite").paquet(write_dir)
     
     return read_dir, write_dir, len(df)
 
