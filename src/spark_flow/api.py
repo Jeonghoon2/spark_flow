@@ -17,7 +17,8 @@ def repartition(load_dt, base_path='~/data2/extract/'):
 
 
     rm_dir(write_dir)
-    
+
+    print(df)
     
 
     df.to_parquet(
