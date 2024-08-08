@@ -50,7 +50,7 @@ with DAG(
 
     def join_df_func(ds_nodash):
         from sparkFlow.api import join_df
-        rd, df = join_df()
+        rd, df = join_df(ds_nodash)
         print("read_dir -> " + rd)
 
         print(df)

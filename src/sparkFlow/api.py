@@ -35,9 +35,9 @@ def join_df(load_dt, base_path='~/data2/repartition'):
     spark = SparkSession.builder.appName("spark_flow").getOrCreate()
     
     read_dir = os.path.expanduser(base_path)
-    spark.read.parquet(read_dir)
+    df = spark.read.parquet(read_dir)
 
-    df1 = spark.filter(F.col('load_dt') == load_dt)
+    df1 = df.filter(F.col('load_dt') == load_dt)
 
     # # print('='*15 + 'df1' + '='*15)
     # # print(df1)
