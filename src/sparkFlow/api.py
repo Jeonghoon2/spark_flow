@@ -121,7 +121,7 @@ def join_df(load_dt, base_path='~/data2/repartition'):
     write_dir = os.path.join(home, "movie","hive")
     
     df_j.write \
-        .mode('overwrite') \
+        .mode(switch_mode(write_dir, load_dt)) \
         .partitionBy("load_dt", "multiMovieYn", "repNationCd") \
         .parquet(write_dir)
 
@@ -156,7 +156,21 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
     agg_df = agg_df.withColumn('load_dt', F.lit(load_dt))
 
     write_dir = os.path.expanduser("~/data2/agg")
+        
+    final_df = agg_df.write \
+        .partitionBy("load_dt") \
+        .mode(switch_mode(write_dir, load_dt)) \
+        .parquet(write_dir)
 
-    agg_df.write.partitionBy("load_dt").mode("overwrite").parquet(write_dir)
+    return home_dir, write_dir, final_df
 
-    return home_dir, write_dir, agg_df.show()
+def switch_mode(write_dir, load_dt):
+    mode = None
+
+    if not os.path.exists(write_dir) or load_dt[6:8] == 1:
+        mode = "overwrite"
+    else:
+        mode = "append"
+
+    return mode
+        
