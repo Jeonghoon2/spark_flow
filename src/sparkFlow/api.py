@@ -143,7 +143,9 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
     nation_k_df.createTempView('nation_k')
 
     agg_df = spark.sql("""
-    SELECT agg(y.totalaudiCnt) as globalMovieAgg, agg(k.totalaudiCnt) as nationMovieAgg
+    SELECT 
+        avg(y.totalaudiCnt) as globalMovieAgg,
+        avg(k.totalaudiCnt) as nationMovieAgg
     FROM nation_y as y FULL JOIN nation_k as k
               ON y.movieCd == k.movieCd
     """)
