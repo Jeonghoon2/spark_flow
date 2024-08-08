@@ -141,15 +141,15 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
     nation_k_df = filter_df.filter(F.col('repNationCd') == 'K')
     nation_f_df = filter_df.filter(F.col('repNationCd') == 'F')
 
-    nation_f_df.createTempView('nation_y')
+    nation_f_df.createTempView('nation_f')
     nation_k_df.createTempView('nation_k')
 
     agg_df = spark.sql("""
     SELECT 
-        avg(sum(y.totalaudiCnt)) as globalMovieAgg,
-        avg(sum(k.totalaudiCnt)) as nationMovieAgg
-    FROM nation_y as y FULL JOIN nation_k as k
-              ON y.movieCd == k.movieCd
+        sum(f.totalaudiCnt) as globalMovieAgg,
+        sum(k.totalaudiCnt) as nationMovieAgg
+    FROM nation_f as f FULL JOIN nation_k as k
+              ON f.movieCd == k.movieCd
     """)
 
     write_dir = os.path.expanduser("~/data2/agg")
