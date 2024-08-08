@@ -106,9 +106,9 @@ def join_df(load_dt, base_path='~/data2/repartition'):
     df_j = spark.sql(f"""
         SELECT
             COALESCE(m.movieCd, n.movieCd) AS movieCd,
-            COALESCE(m.salesAmt, n.salesAmt), -- 매출액
-            COALESCE(m.audiCnt, n.audiCnt), -- 관객수
-            COALESCE(m.showCnt, n.showCnt), --- 사영횟수
+            COALESCE(m.salesAmt, n.salesAmt) as totalSalesAmt, -- 매출액
+            COALESCE(m.audiCnt, n.audiCnt) as totalaudiCnt, -- 관객수
+            COALESCE(m.showCnt, n.showCnt) as totalShowCnt, --- 사영횟수
             multiMovieYn, -- 다양성 영화/상업영화를 구분지어 조회할 수 있습니다. “Y” : 다양성 영화 “N”
             repNationCd, -- 한국/외국 영화별로 조회할 수 있습니다. “K: : 한국영화 “F” : 외국영화
             '{load_dt}' AS load_dt
@@ -143,7 +143,7 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
     nation_k_df.createTempView('nation_k')
 
     agg_df = spark.sql("""
-    SELECT sum(y.audiCnt) + sum(k.auditCnt) as totalAudit
+    SELECT agg(y.totalaudiCnt) as 해외 영화 평균, agg(k.totalaudiCnt) as 국내영화 평균
     FROM nation_y as y FULL JOIN nation_k as k
               ON y.movieCd == k.movieCd
     """)

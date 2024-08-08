@@ -56,7 +56,13 @@ with DAG(
         print(df)
 
     def agg_func(ds_nodash):
-        pass
+        from sparkFlow.api import agg
+        r,w,d = agg(ds_nodash)    
+        print(f"""
+        READ    ->   {r},
+        WRITE   ->   {w}
+        """)
+        print(d)
 
     re_partition = PythonVirtualenvOperator(
         task_id="re.partition",
@@ -76,7 +82,7 @@ with DAG(
     agg = PythonVirtualenvOperator(
         task_id="agg",
         python_callable=agg_func,
-        # requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.1.0/movie_flow"],
+        requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.1.0/movie_flow"],
         system_site_packages=False,
     )
 
