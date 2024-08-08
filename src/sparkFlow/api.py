@@ -161,12 +161,12 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
 
     mode = switch_mode(write_dir, load_dt)
 
-    final_df = agg_df.write \
+    agg_df.write \
         .partitionBy("load_dt") \
         .mode(mode) \
         .parquet(write_dir)
 
-    return home_dir, write_dir, final_df, mode
+    return home_dir, write_dir, agg_df, mode
 
 def switch_mode(write_dir, load_dt):
     mode = None

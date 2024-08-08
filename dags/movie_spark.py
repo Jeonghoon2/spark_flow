@@ -41,7 +41,7 @@ with DAG(
     def re_partition_func(ds_nodash):
         from sparkFlow.api import repartition
         # read_dir, write_dir, cnt = repartition(ds_nodash)
-        r,w,d,m = repartition(ds_nodash)
+        r,w,d = repartition(ds_nodash)
         # print(f"""
         #     READ        --->    {read_dir}
         #     WRITE       --->    {write_dir}
@@ -58,13 +58,14 @@ with DAG(
 
     def agg_func(ds_nodash):
         from sparkFlow.api import agg
-        r,w,d = agg(ds_nodash)
-        print(ds_nodash[4:8])
+        r,w,d,m = agg(ds_nodash)
+
         print(f"""
+        MODE    ->   {m},
         READ    ->   {r},
         WRITE   ->   {w}
         """)
-        print(d)
+        print(d.show())
 
     re_partition = PythonVirtualenvOperator(
         task_id="re.partition",
