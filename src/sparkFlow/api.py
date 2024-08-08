@@ -143,13 +143,13 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
     nation_k_df.createTempView('nation_k')
 
     agg_df = spark.sql("""
-    SELECT COUNT(*)
+    SELECT sum(y.audiCnt) + sum(k.auditCnt) as totalAudit
     FROM nation_y as y FULL JOIN nation_k as k
               ON y.movieCd == k.movieCd
     """)
 
     write_dir = os.path.expanduser("~/data2/agg")
 
-    agg_df.write.parquet(write_dir)
+    agg_df.write.mode("overwrite").parquet(write_dir)
 
     return home_dir, write_dir, agg_df.show()
