@@ -120,12 +120,14 @@ def join_df(load_dt, base_path='~/data2/repartition'):
     home = os.path.expanduser("~/data2/")
     write_dir = os.path.join(home, "movie","hive")
     
+    mode = switch_mode(write_dir, load_dt)
+
     df_j.write \
-        .mode(switch_mode(write_dir, load_dt)) \
+        .mode(mode) \
         .partitionBy("load_dt", "multiMovieYn", "repNationCd") \
         .parquet(write_dir)
 
-    return read_dir, df_j.show()
+    return read_dir, write_dir, df_j,  mode
 
 def agg(load_dt,base_dir='~/data2/movie/hive'):
     # sparksql 을 사용하여 일별 독립영화 여부, 해외영화 여부에 대하여 각각 합을 구하기(누적은 제외 일별관객수, 수익 ... )
@@ -156,18 +158,20 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
     agg_df = agg_df.withColumn('load_dt', F.lit(load_dt))
 
     write_dir = os.path.expanduser("~/data2/agg")
-        
+
+    mode = switch_mode(write_dir, load_dt)
+
     final_df = agg_df.write \
         .partitionBy("load_dt") \
-        .mode(switch_mode(write_dir, load_dt)) \
+        .mode(mode) \
         .parquet(write_dir)
 
-    return home_dir, write_dir, final_df
+    return home_dir, write_dir, final_df, mode
 
 def switch_mode(write_dir, load_dt):
     mode = None
 
-    if not os.path.exists(write_dir) or load_dt[6:8] == 1:
+    if not os.path.exists(write_dir) or load_dt[4:8] == "0101":
         mode = "overwrite"
     else:
         mode = "append"
