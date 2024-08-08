@@ -30,13 +30,17 @@ def rm_dir(write_dir):
 
 
 
-def join_df(load_dt, base_path='~/data2/repartition/'):
+def join_df(load_dt, base_path='~/data2/repartition'):
     spark = SparkSession.builder.appName("spark_flow").getOrCreate()
     
     home_dir = os.path.expanduser(base_path)
     spark.read.parquet(home_dir)
 
     df1 = spark.filter(f'load_dt == {load_dt}')
+
+    print('='*15 + 'df1' + '='*15)
+    print(df1)
+    print('='*15 + '='*15)
 
     df1.createOrReplaceTempView("one_day")
 
