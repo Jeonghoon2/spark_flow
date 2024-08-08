@@ -18,12 +18,12 @@ def repartition(load_dt, base_path='~/data2/extract/'):
 
     rm_dir(write_dir)
 
-    print(df)
+    # print(df)
     
 
-    df.write.mode("overwrite").paquet(write_dir)
+    # df.write.mode("overwrite").paquet(write_dir)
     
-    return read_dir, write_dir, len(df)
+    return df
 
 #  이미 존재 하는 폴더 삭제 func
 def rm_dir(write_dir):

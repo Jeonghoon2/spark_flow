@@ -40,12 +40,13 @@ with DAG(
 
     def re_partition_func(ds_nodash):
         from sparkFlow.api import repartition
-        read_dir, write_dir, cnt = repartition(ds_nodash)
-        print(f"""
-            READ        --->    {read_dir}
-            WRITE       --->    {write_dir}
-            WRITE_CNT   --->    {cnt}
-        """)
+        # read_dir, write_dir, cnt = repartition(ds_nodash)
+        print(repartition(ds_nodash))
+        # print(f"""
+        #     READ        --->    {read_dir}
+        #     WRITE       --->    {write_dir}
+        #     WRITE_CNT   --->    {cnt}
+        # """)
 
     def join_df_func(ds_nodash):
         from sparkFlow.api import join_df
