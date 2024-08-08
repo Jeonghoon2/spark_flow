@@ -38,9 +38,9 @@ def join_df(load_dt, base_path='~/data2/repartition'):
 
     df1 = spark.filter(f'load_dt == {load_dt}')
 
-    print('='*15 + 'df1' + '='*15)
-    print(df1)
-    print('='*15 + '='*15)
+    # print('='*15 + 'df1' + '='*15)
+    # print(df1)
+    # print('='*15 + '='*15)
 
     df1.createOrReplaceTempView("one_day")
 
@@ -119,8 +119,10 @@ def join_df(load_dt, base_path='~/data2/repartition'):
 
     df_j.createOrReplaceTempView("join_df") 
 
+    home = os.path.expanduser("~/data2/")
+    write_dir = os.path.join(home, "movie","hive")
     
-    df_j.write.mode('overwrite').partitionBy("load_dt", "multiMovieYn", "repNationCd").parquet("/home/diginori/data/movie/hive")
+    df_j.write.mode('overwrite').partitionBy("load_dt", "multiMovieYn", "repNationCd").parquet(write_dir)
 
     return join_df
 
