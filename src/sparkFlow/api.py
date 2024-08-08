@@ -153,7 +153,7 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
     """)
 
     # 새로운 컬럼을 추가
-    agg_df = agg_df.withColumn(F.col('load_dt'), F.lit(load_dt))
+    agg_df = agg_df.withColumn('load_dt', F.lit(load_dt))
 
     write_dir = os.path.expanduser("~/data2/agg")
 
