@@ -38,95 +38,91 @@ def join_df(load_dt, base_path='~/data2/repartition'):
     df = spark.read.parquet(read_dir)
 
     df1 = df.filter(F.col('load_dt') == load_dt)
+    df1.createOrReplaceTempView("one_day")
 
-    # # print('='*15 + 'df1' + '='*15)
-    # # print(df1)
-    # # print('='*15 + '='*15)
-
-    # df1.createOrReplaceTempView("one_day")
-
-    # df2 = spark.sql(f"""
-    #     SELECT 
-    #         movieCd, -- 영화의 대표코드
-    #         repNationCd -- 한국/외국 영화별로 조회할 수 있습니다. “K: : 한국영화 “F” : 외국영화
-    #     FROM one_day
-    #     WHERE multiMovieYn IS NULL
-    # """)
-
-    # df2.createOrReplaceTempView("multi_null")
-
-    # df3 = spark.sql(f"""
-    #     SELECT 
-    #         movieCd, -- 영화의 대표코드
-    #         multiMovieYn -- 다양성 영화/상업영화를 구분지어 조회할 수 있습니다. “Y” : 다양성 영화 “N”
-    #     FROM one_day
-    #     WHERE repNationCd IS NULL
-    #     """)
-    # df3.createOrReplaceTempView("multi_null")
-
-    # df_meta = spark.sql("""SELECT
-    #         COALESCE(m.movieCd, n.movieCd) AS movieCd,
-    #         multiMovieYn,
-    #         repNationCd
-    #     FROM multi_null m FULL OUTER JOIN nation_null n
-    #     ON m.movieCd = n.movieCd
-    #         """)
     
-    # ######################################################
 
-    # df2 = spark.sql(f"""
-    #     SELECT 
-    #         movieCd, -- 영화의 대표코드
-    #         movieNm,
-    #         salesAmt, -- 매출액
-    #         audiCnt, -- 관객수
-    #         showCnt, --- 사영횟수
-    #         -- multiMovieYn, -- 다양성 영화/상업영화를 구분지어 조회할 수 있습니다. “Y” : 다양성 영화 “N”
-    #         repNationCd, -- 한국/외국 영화별로 조회할 수 있습니다. “K: : 한국영화 “F” : 외국영화
-    #         '{load_dt}' AS load_dt
-    #     FROM one_day
-    #     WHERE multiMovieYn IS NULL
-    #     """)
+    df2 = spark.sql(f"""
+        SELECT 
+            movieCd, -- 영화의 대표코드
+            repNationCd -- 한국/외국 영화별로 조회할 수 있습니다. “K: : 한국영화 “F” : 외국영화
+        FROM one_day
+        WHERE multiMovieYn IS NULL
+    """)
 
-    # df2.createOrReplaceTempView("multi_null")
+    df2.createOrReplaceTempView("multi_null")
 
-    # df3 = spark.sql(f"""
-    #     SELECT 
-    #         movieCd, -- 영화의 대표코드
-    #         movieNm,
-    #         salesAmt, -- 매출액
-    #         audiCnt, -- 관객수
-    #         showCnt, --- 사영횟수
-    #         multiMovieYn, -- 다양성 영화/상업영화를 구분지어 조회할 수 있습니다. “Y” : 다양성 영화 “N”
-    #         -- repNationCd, -- 한국/외국 영화별로 조회할 수 있습니다. “K: : 한국영화 “F” : 외국영화
-    #         '{load_dt}' AS load_dt
-    #     FROM one_day
-    #     WHERE repNationCd IS NULL
-    #     """)
+    df3 = spark.sql(f"""
+        SELECT 
+            movieCd, -- 영화의 대표코드
+            multiMovieYn -- 다양성 영화/상업영화를 구분지어 조회할 수 있습니다. “Y” : 다양성 영화 “N”
+        FROM one_day
+        WHERE repNationCd IS NULL
+        """)
+    df3.createOrReplaceTempView("multi_null")
 
-    # df3.createOrReplaceTempView("nation_null")
-
-    # df_j = spark.sql(f"""
-    #     SELECT
-    #         COALESCE(m.movieCd, n.movieCd) AS movieCd,
-    #         COALESCE(m.salesAmt, n.salesAmt), -- 매출액
-    #         COALESCE(m.audiCnt, n.audiCnt), -- 관객수
-    #         COALESCE(m.showCnt, n.showCnt), --- 사영횟수
-    #         multiMovieYn, -- 다양성 영화/상업영화를 구분지어 조회할 수 있습니다. “Y” : 다양성 영화 “N”
-    #         repNationCd, -- 한국/외국 영화별로 조회할 수 있습니다. “K: : 한국영화 “F” : 외국영화
-    #         '{load_dt}' AS load_dt
-    #     FROM multi_null m FULL OUTER JOIN nation_null n
-    #     ON m.movieCd = n.movieCd""")
-
-    # df_j.createOrReplaceTempView("join_df") 
-
-    # home = os.path.expanduser("~/data2/")
-    # write_dir = os.path.join(home, "movie","hive")
+    df_meta = spark.sql("""SELECT
+            COALESCE(m.movieCd, n.movieCd) AS movieCd,
+            multiMovieYn,
+            repNationCd
+        FROM multi_null m FULL OUTER JOIN nation_null n
+        ON m.movieCd = n.movieCd
+            """)
     
-    # df_j.write.mode('overwrite').partitionBy("load_dt", "multiMovieYn", "repNationCd").parquet(write_dir)
+    ######################################################
 
-    return read_dir, df1
+    df2 = spark.sql(f"""
+        SELECT 
+            movieCd, -- 영화의 대표코드
+            movieNm,
+            salesAmt, -- 매출액
+            audiCnt, -- 관객수
+            showCnt, --- 사영횟수
+            -- multiMovieYn, -- 다양성 영화/상업영화를 구분지어 조회할 수 있습니다. “Y” : 다양성 영화 “N”
+            repNationCd, -- 한국/외국 영화별로 조회할 수 있습니다. “K: : 한국영화 “F” : 외국영화
+            '{load_dt}' AS load_dt
+        FROM one_day
+        WHERE multiMovieYn IS NULL
+        """)
 
+    df2.createOrReplaceTempView("multi_null")
+
+    df3 = spark.sql(f"""
+        SELECT 
+            movieCd, -- 영화의 대표코드
+            movieNm,
+            salesAmt, -- 매출액
+            audiCnt, -- 관객수
+            showCnt, --- 사영횟수
+            multiMovieYn, -- 다양성 영화/상업영화를 구분지어 조회할 수 있습니다. “Y” : 다양성 영화 “N”
+            -- repNationCd, -- 한국/외국 영화별로 조회할 수 있습니다. “K: : 한국영화 “F” : 외국영화
+            '{load_dt}' AS load_dt
+        FROM one_day
+        WHERE repNationCd IS NULL
+        """)
+
+    df3.createOrReplaceTempView("nation_null")
+
+    df_j = spark.sql(f"""
+        SELECT
+            COALESCE(m.movieCd, n.movieCd) AS movieCd,
+            COALESCE(m.salesAmt, n.salesAmt), -- 매출액
+            COALESCE(m.audiCnt, n.audiCnt), -- 관객수
+            COALESCE(m.showCnt, n.showCnt), --- 사영횟수
+            multiMovieYn, -- 다양성 영화/상업영화를 구분지어 조회할 수 있습니다. “Y” : 다양성 영화 “N”
+            repNationCd, -- 한국/외국 영화별로 조회할 수 있습니다. “K: : 한국영화 “F” : 외국영화
+            '{load_dt}' AS load_dt
+        FROM multi_null m FULL OUTER JOIN nation_null n
+        ON m.movieCd = n.movieCd""")
+
+    df_j.createOrReplaceTempView("join_df") 
+
+    home = os.path.expanduser("~/data2/")
+    write_dir = os.path.join(home, "movie","hive")
+    
+    df_j.write.mode('overwrite').partitionBy("load_dt", "multiMovieYn", "repNationCd").parquet(write_dir)
+
+    return read_dir, df_j.show()
 
 
 def agg():
