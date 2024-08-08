@@ -120,10 +120,12 @@ def join_df(load_dt, base_path='~/data2/repartition'):
     home = os.path.expanduser("~/data2/")
     write_dir = os.path.join(home, "movie","hive")
     
-    df_j.write.mode('overwrite').partitionBy("load_dt", "multiMovieYn", "repNationCd").parquet(write_dir)
+    df_j.write \
+        .mode('overwrite') \
+        .partitionBy("load_dt", "multiMovieYn", "repNationCd") \
+        .parquet(write_dir)
 
     return read_dir, df_j.show()
-
 
 def agg(load_dt,base_dir='~/data2/movie/hive'):
     # sparksql 을 사용하여 일별 독립영화 여부, 해외영화 여부에 대하여 각각 합을 구하기(누적은 제외 일별관객수, 수익 ... )
@@ -137,9 +139,9 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
     filter_df = df.filter(F.col('load_dt') == load_dt)
 
     nation_k_df = filter_df.filter(F.col('repNationCd') == 'K')
-    nation_y_df = filter_df.filter(F.col('repNationCd') == 'F')
+    nation_f_df = filter_df.filter(F.col('repNationCd') == 'F')
 
-    nation_y_df.createTempView('nation_y')
+    nation_f_df.createTempView('nation_y')
     nation_k_df.createTempView('nation_k')
 
     agg_df = spark.sql("""
