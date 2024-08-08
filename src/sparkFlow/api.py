@@ -32,7 +32,7 @@ def rm_dir(write_dir):
 
 
 def join_df(load_dt, base_path='~/data2/repartition'):
-    spark = SparkSession.builder.appName("spark_flow").getOrCreate()
+    spark : SparkSession = SparkSession.builder.appName("spark_flow").getOrCreate()
     
     read_dir = os.path.expanduser(base_path)
     df = spark.read.parquet(read_dir)
@@ -125,7 +125,31 @@ def join_df(load_dt, base_path='~/data2/repartition'):
     return read_dir, df_j.show()
 
 
-def agg():
+def agg(load_dt,base_dir='~/data2/movie/hive'):
     # sparksql 을 사용하여 일별 독립영화 여부, 해외영화 여부에 대하여 각각 합을 구하기(누적은 제외 일별관객수, 수익 ... )
     # 위에서 구한 SUM 데이터를 "/home//data/movie/sum-multi", "/home//data/movie/sum-nation" 에 날짜를 파티션 하여 저장
-    spark = SparkSession.builder.appName("spark_flow").getOrCreate()
+    spark : SparkSession = SparkSession.builder.appName("spark_flow").getOrCreate()
+
+    home_dir = os.path.expanduser(base_dir)
+
+    df = spark.read.parquet(home_dir)
+
+    filter_df = df.filter(F.col('load_dt') == load_dt)
+
+    nation_k_df = filter_df.filter(F.col('repNationCd') == 'K')
+    nation_y_df = filter_df.filter(F.col('repNationCd') == 'Y')
+
+    nation_y_df.createTempView('nation_y')
+    nation_k_df.createTempView('nation_k')
+
+    agg_df = spark.sql("""
+    SELECT COUNT(*)
+    FROM nation_y as y FULL JOIN nation_k as k
+              ON y.movieCd == k.movieCd
+    """)
+
+    write_dir = os.path.expanduser("~/data2/agg")
+
+    agg_df.write.parquet(write_dir)
+
+    return home_dir, write_dir, agg_df.show()
