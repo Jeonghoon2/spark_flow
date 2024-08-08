@@ -171,7 +171,7 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
 def switch_mode(write_dir, load_dt):
     mode = None
 
-    if not os.path.exists(write_dir) or load_dt[4:8] == "0101":
+    if not os.path.exists(write_dir) or int(load_dt[4:8]) == 101:
         mode = "overwrite"
     else:
         mode = "append"
