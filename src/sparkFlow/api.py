@@ -22,7 +22,7 @@ def repartition(load_dt, base_path='~/data2/extract/'):
         cols=['load_dt','multiMovieYn','repNationCd']
         )
     
-    return read_dir
+    return read_dir, write_dir, len(df)
 
 #  이미 존재 하는 폴더 삭제 func
 def rm_dir(write_dir):

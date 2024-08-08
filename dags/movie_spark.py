@@ -26,8 +26,8 @@ with DAG(
         max_active_tasks=3,
         description='movie',
         schedule="0 0 * * *",
-        start_date=datetime(2022, 1, 1),
-        end_date=datetime(2022, 1, 5),
+        start_date=datetime(2015, 1, 1),
+        end_date=datetime(2015, 1, 5),
         catchup=True,
         tags=['api', 'movie', 'amt'],
 ) as dag:
@@ -38,19 +38,25 @@ with DAG(
         bash_command="echo 'start'"
     )
 
-    def re_partition_func():
-        pass
+    def re_partition_func(ds_nodash):
+        from spark_flow.api import repartition
+        read_dir, write_dir, cnt = repartition(ds_nodash)
+        print(f"""
+            READ        --->    {read_dir}
+            WRITE       --->    {write_dir}
+            WRITE_CNT   --->    {cnt}
+        """)
 
-    def join_df_func():
-        pass
+    def join_df_func(ds_nodash):
+        from spark_flow.api import join_df
 
-    def agg_func():
+    def agg_func(ds_nodash):
         pass
 
     re_partition = PythonVirtualenvOperator(
         task_id="re.partition",
         python_callable=re_partition_func,
-        # requirements=["git+https://github.com/DE32-Team-Two/Extract.git@d2.0.0/parquet"],
+        # requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.1.0/movie_flow"],
         system_site_packages=False,
         
     )
@@ -58,14 +64,14 @@ with DAG(
     join_df = PythonVirtualenvOperator(
         task_id="join.df",
         python_callable=join_df_func,
-        # requirements=["git+https://github.com/DE32-Team-Two/Extract.git@d2.0.0/parquet"],
+        # requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.1.0/movie_flow"],
         system_site_packages=False,
     )
 
     agg = PythonVirtualenvOperator(
         task_id="agg",
         python_callable=agg_func,
-        # requirements=["git+https://github.com/DE32-Team-Two/Extract.git@d2.0.0/parquet"],
+        # requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.1.0/movie_flow"],
         system_site_packages=False,
     )
 
