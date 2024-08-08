@@ -59,7 +59,7 @@ def join_df(load_dt, base_path='~/data2/repartition'):
         FROM one_day
         WHERE repNationCd IS NULL
         """)
-    df3.createOrReplaceTempView("multi_null")
+    df3.createOrReplaceTempView("nation_null")
 
     df_meta = spark.sql("""SELECT
             COALESCE(m.movieCd, n.movieCd) AS movieCd,
