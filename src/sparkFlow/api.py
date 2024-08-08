@@ -152,7 +152,7 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
               ON f.movieCd == k.movieCd
     """)
 
-    agg_df.withColumn('load_dt', load_dt)
+    agg_df.withColumn('load_dt', F.lit(load_dt))
 
     write_dir = os.path.expanduser("~/data2/agg")
 
