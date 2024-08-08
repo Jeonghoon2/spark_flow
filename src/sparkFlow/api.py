@@ -18,7 +18,7 @@ def repartition(load_dt, base_path='~/data2/extract/'):
 
     df.to_parquet(
         write_dir,
-        cols=['load_dt','multiMovieYn','repNationCd']
+        partition_cols=['load_dt','multiMovieYn','repNationCd']
         )
     
     return read_dir, write_dir, len(df)
