@@ -51,6 +51,8 @@ with DAG(
     def join_df_func(ds_nodash):
         from sparkFlow.api import join_df
 
+        print(join_df)
+
     def agg_func(ds_nodash):
         pass
 
@@ -65,7 +67,7 @@ with DAG(
     join_df = PythonVirtualenvOperator(
         task_id="join.df",
         python_callable=join_df_func,
-        # requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.1.0/movie_flow"],
+        requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.1.0/movie_flow"],
         system_site_packages=False,
     )
 

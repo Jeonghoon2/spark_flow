@@ -3,9 +3,9 @@ import os
 import shutil
 from pyspark.sql import SparkSession
 
-def repartition(load_dt, base_path='~/data2/extract/'):
+def repartition(load_dt, base_path='~/data2/'):
     home_dir = os.path.expanduser(base_path)
-    read_dir = os.path.join(home_dir,f'load_dt={load_dt}')
+    read_dir = os.path.join(home_dir,'extract',f'load_dt={load_dt}')
 
     # Parquet 파일 읽기
     df = pd.read_parquet(read_dir)
