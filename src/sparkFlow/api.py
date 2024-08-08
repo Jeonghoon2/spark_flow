@@ -152,8 +152,10 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
               ON f.movieCd == k.movieCd
     """)
 
+    agg_df.withColumn('load_dt', load_dt)
+
     write_dir = os.path.expanduser("~/data2/agg")
 
-    agg_df.write.mode("overwrite").parquet(write_dir)
+    agg_df.write.partitionBy("load_dt").mode("overwrite").parquet(write_dir)
 
     return home_dir, write_dir, agg_df.show()
