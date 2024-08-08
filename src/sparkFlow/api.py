@@ -11,7 +11,7 @@ def repartition(load_dt, base_path='~/data2/extract/'):
     df = pd.read_parquet(read_dir)
 
     # load_dt 컬럼 추가
-    df[load_dt] = load_dt
+    df['load_dt'] = load_dt
 
     write_dir = os.path.join(home_dir,'repartition')
     rm_dir(write_dir)
