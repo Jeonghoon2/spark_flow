@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import shutil
 from pyspark.sql import SparkSession
+import pyspark.sql.functions as F
 
 def repartition(load_dt, base_path='~/data2/'):
     home_dir = os.path.expanduser(base_path)
@@ -36,7 +37,7 @@ def join_df(load_dt, base_path='~/data2/repartition'):
     read_dir = os.path.expanduser(base_path)
     spark.read.parquet(read_dir)
 
-    df1 = spark.filter(f'load_dt == {load_dt}')
+    df1 = spark.filter(F.col('load_dt') == load_dt)
 
     # # print('='*15 + 'df1' + '='*15)
     # # print(df1)
@@ -131,4 +132,4 @@ def join_df(load_dt, base_path='~/data2/repartition'):
 def agg():
     # sparksql 을 사용하여 일별 독립영화 여부, 해외영화 여부에 대하여 각각 합을 구하기(누적은 제외 일별관객수, 수익 ... )
     # 위에서 구한 SUM 데이터를 "/home//data/movie/sum-multi", "/home//data/movie/sum-nation" 에 날짜를 파티션 하여 저장
-    pass
+    spark = SparkSession.builder.appName("spark_flow").getOrCreate()
