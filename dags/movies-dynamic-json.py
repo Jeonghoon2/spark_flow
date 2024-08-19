@@ -44,21 +44,21 @@ with DAG(
     get_data = PythonVirtualenvOperator(
         task_id="get.data",
         python_callable=tmp,
-        requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.2.0/movie_flow"],
+        requirements=["git+https://github.com/S00zzang/spark_flow.git@d0.2.0/movie_flow"],
         system_site_packages=False,
     )
 
     parsing_parquet = PythonVirtualenvOperator(
         task_id="parsing.parquet",
         python_callable=tmp,
-        requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.2.0/movie_flow"],
+        requirements=["git+https://github.com/S00zzang/spark_flow.git@d0.2.0/movie_flow"],
         system_site_packages=False,
     )
 
     select_parquet = PythonVirtualenvOperator(
         task_id="select.parquet",
         python_callable=tmp,
-        requirements=["git+https://github.com/Jeonghoon2/spark_flow.git@d0.2.0/movie_flow"],
+        requirements=["git+https://github.com/S00zzang/spark_flow.git@d0.2.0/movie_flow"],
         system_site_packages=False,
     )
 
