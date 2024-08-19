@@ -154,6 +154,8 @@ def agg(load_dt,base_dir='~/data2/movie/hive'):
               ON f.movieCd == k.movieCd
     """)
 
+
+
     # 새로운 컬럼을 추가
     agg_df = agg_df.withColumn('load_dt', F.lit(load_dt))
 
